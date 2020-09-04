@@ -1,6 +1,7 @@
 import inspect
 import logging.config
 import os
+from bot.database import db
 
 from bot.utils.color import Color
 
@@ -113,6 +114,7 @@ class Logger:
         )
 
         func(msg)
+        db["logs"].insert({"msg": msg})
         return msg
 
     @classmethod
