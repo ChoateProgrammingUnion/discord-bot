@@ -30,11 +30,14 @@ class CPUBotClient(discord.Client):
         await bot.channels.setup_guild_channels(self)
 
     async def on_member_join(self, member: discord.Member):
+        if member.guild.id != self.guild.id:
+            return
+
         info(f"{member} has joined the server", header=f"[{member}]")
-        await member.send("Test")
+        await register.handle_join_server(self, member)
 
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.DMChannel):
             if isinstance(message.author, discord.User):
                 info(f'Received "{message.content}"', header=f"[{message.author}]")
-                await register.setup_registration(self, message.author)
+                await register.handle_dm(self, message.author, message)
