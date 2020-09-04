@@ -7,14 +7,17 @@ if not env.DATABASE:
 else:
     db = mongoset.connect(env.DATABASE, db_name="discord-bot")
 
+
 class User(DocumentModel):
     id: int = Immutable()
     registered: bool = Immutable()
     registration_step: int
     full_name: str
-    choate_email: Immutable()
+    choate_email: str = Immutable()
+
 
 class UserTable(ModelTable[User]):
     member_class = User
+
 
 user_table = UserTable(db["user"])

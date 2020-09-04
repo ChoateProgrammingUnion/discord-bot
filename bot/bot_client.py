@@ -2,6 +2,7 @@ import discord
 
 import bot.channels
 import bot.roles
+from bot import register
 from env import DISCORD_GUILD_ID
 from bot.utils.logger import info, error
 
@@ -30,7 +31,10 @@ class CPUBotClient(discord.Client):
 
     async def on_member_join(self, member: discord.Member):
         info(f"{member} has joined the server", header=f"[{member}]")
-        await self.welcome_user(member)
+        await member.send("Test")
 
-    async def welcome_user(self, member: discord.Member):
-        await self.new_members_channel.send(f"Welcome to the server, {member.mention}!")
+    async def on_message(self, message: discord.Message):
+        if isinstance(message.channel, discord.DMChannel):
+            if isinstance(message.author, discord.User):
+                info(f'Received "{message.content}"', header=f"[{message.author}]")
+                await register.setup_registration(self, message.author)
