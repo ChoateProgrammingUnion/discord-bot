@@ -1,6 +1,7 @@
 import discord
 
 from bot.database import user_table, DBUser
+from bot.msgs import templates
 
 
 # REGISTRATION STEPS
@@ -51,8 +52,7 @@ async def step0(client, user: discord.User, db_user: DBUser):
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
     # Send message and add reactions
-    message = await user.send("""**Welcome to the CPU discord server!** It seems you have joined the server on this \
-account before, and your previous info was saved. Is this info still correct?""", embed=info_embed)
+    message = await user.send(templates.welcome_back, embed=info_embed)
     await message.add_reaction('👍')
     await message.add_reaction('👎')
 
@@ -74,15 +74,12 @@ account before, and your previous info was saved. Is this info still correct?"""
         await message.remove_reaction('👎', client.user)
         db_user.registration_step = 1
         user_table.update(db_user)
-        await user.send("Okay, your account was reset.\n\n")
+        await user.send(templates.reset)
         await step1(user)
 
 
 async def step1(user: discord.User):
-    await user.send("""\n\n**Welcome to the CPU discord server!** Before you can gain access to the server, we need to \
-collect some information about you to make sure you are a Choate student, and so we can add you to our email list.\n\
-The first thing we need is your real name so we can change your nickname in the server.\n\
-Please type your first name:""")
+    await user.send(templates.new_welcome)
 
 
 async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
@@ -93,8 +90,7 @@ async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
 
 
 async def step2(user: discord.User, db_user: DBUser):
-    await user.send(f"""Thanks, {db_user.first_name}! Next, we'll need your last name.\n\
-Please type your last name:""")
+    await user.send(templates.last_name.format(**locals))
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
@@ -108,4 +104,4 @@ async def welcome_user(client, member: discord.Member):
     from bot.bot_client import CPUBotClient
     client: CPUBotClient
 
-    await client.new_members_channel.send(f"Welcome to the server, {member.mention}!")
+    await client.new_members_channel.send(templates.public_welcome.format(**locals))

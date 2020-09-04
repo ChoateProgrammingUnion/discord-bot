@@ -8,6 +8,7 @@ authors = ["Ethan Chapman <ethan.chapman0@outlook.com>"]
 python = "^3.8.2"
 "discord.py" = "*"
 mongoset = "^0.3.2"
+pyyaml = "^5.3.1"
 
 [tool.poetry.dev-dependencies]
 
