@@ -44,6 +44,7 @@ async def finish_registration(client, user: discord.User, db_user: DBUser):
 
     await member.edit(nick=f"{db_user.first_name} {db_user.last_name}")
     await member.add_roles(client.club_member_role)
+    await welcome_user(client, member)
 
 
 async def step0(client, user: discord.User, db_user: DBUser):
@@ -80,6 +81,7 @@ async def step0(client, user: discord.User, db_user: DBUser):
     elif reaction.emoji == '👎':
         await message.remove_reaction('👍', client.user)
         await message.remove_reaction('👎', client.user)
+        db_user.registered = False
         db_user.registration_step = 1
         user_table.update(db_user)
         await user.send(templates.reset)
@@ -88,6 +90,7 @@ async def step0(client, user: discord.User, db_user: DBUser):
 
 async def step1(user: discord.User):
     await user.send(templates.new_welcome)
+    await user.send(templates.first_name)
 
 
 async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
@@ -141,12 +144,15 @@ async def step4(client, user: discord.User, db_user: DBUser):
     reaction: discord.reaction = res[0]
 
     if reaction.emoji == '👍':
+        await message.remove_reaction('👍', client.user)
+        await message.remove_reaction('👎', client.user)
         db_user.registration_step = 5
         user_table.update(db_user)
         await step5(client, user, db_user)
 
     elif reaction.emoji == '👎':
-        pass
+        await message.remove_reaction('👍', client.user)
+        await message.remove_reaction('👎', client.user)
 
 
 async def step5(client, user: discord.User, db_user: DBUser):
