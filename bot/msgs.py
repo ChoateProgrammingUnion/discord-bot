@@ -1,5 +1,6 @@
 import yaml
 
+
 class MessageTemplates():
     def __init__(self):
         with open("bot/messages.yaml") as f:
