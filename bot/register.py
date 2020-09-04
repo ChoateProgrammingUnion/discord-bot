@@ -1,6 +1,6 @@
 import discord
 
-from bot.database import user_table, DBUser
+from bot.database import user_table, DBUser, get_db_user
 from bot.msgs import templates
 
 
@@ -13,17 +13,6 @@ from bot.msgs import templates
 # 5 - Registered!
 
 from bot.utils.logger import info, error
-
-
-def get_db_user(user) -> DBUser:
-    db_user = user_table.find_discord_user(user)
-
-    if not db_user:
-        db_user = DBUser(discord_id=user.id, registered=False, registration_step=1)
-        user_table.create(db_user)
-
-    return db_user
-
 
 async def handle_join_server(client, user: discord.Member):
     db_user = get_db_user(user)

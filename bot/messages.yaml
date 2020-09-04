@@ -26,3 +26,6 @@ finished_registration: |
 
 public_welcome: |
   Welcome to the server, {member.mention}!
+
+help: |
+  If you need help, either reach out to Ethan Chapman or Max Fan who made me.

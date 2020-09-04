@@ -2,7 +2,9 @@ import discord
 
 import bot.channels
 import bot.roles
-from bot import register
+from bot.database import get_db_user
+import bot.commands
+import bot.register
 from env import DISCORD_GUILD_ID
 from bot.utils.logger import info, error
 
@@ -39,5 +41,8 @@ class CPUBotClient(discord.Client):
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.DMChannel):
             if isinstance(message.author, discord.User):
-                info(f'Received "{message.content}"', header=f"[{message.author}]")
-                await register.handle_dm(self, message.author, message)
+                if not get_db_user(message.author).registered: # is registered
+                    info(f'Received "{message.content}"', header=f"[{message.author}]")
+                    await bot.register.handle_dm(self, message.author, message)
+                else:
+                    await bot.commands.handle_dm(self, message.author, message)
