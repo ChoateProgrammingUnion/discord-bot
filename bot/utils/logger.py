@@ -2,7 +2,7 @@ import inspect
 import logging.config
 import os
 
-from utils.color import Color
+from bot.utils.color import Color
 
 """
 Logger utility for debugging. 
