@@ -34,6 +34,9 @@ async def finish_registration(client, user: discord.User, db_user: DBUser):
     from bot.bot_client import CPUBotClient
     client: CPUBotClient
 
+    db_user.registered = True
+    user_table.update(db_user)
+
     member: discord.Member
     for member in client.guild.members:
         if member.id == user.id:
