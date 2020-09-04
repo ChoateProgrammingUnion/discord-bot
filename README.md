@@ -17,6 +17,7 @@ poetry shell
 
 ## Contributing
 All contributions are welcome -- we welcome PRs, new issues, or simply better documentation. If you're here to edit a message template, the templates can be found in `bot/messages.yaml`.
+All work is done under the GPL license (see LICENSE) for more.
 
 ## Acknowledgments
 Our thanks go to Jerry Wang \'20 (CPU Officer 2018-2019, President 2019-2020), who made the first iteration of CPUBot.
