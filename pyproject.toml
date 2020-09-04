@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "cpudiscordbot"
+name = "discordbot"
 version = "0.1.0"
 description = ""
 authors = ["Ethan Chapman <ethan.chapman0@outlook.com>"]
@@ -7,6 +7,7 @@ authors = ["Ethan Chapman <ethan.chapman0@outlook.com>"]
 [tool.poetry.dependencies]
 python = "^3.8.2"
 "discord.py" = "*"
+mongoset = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 
