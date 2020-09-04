@@ -12,7 +12,7 @@ class TextChannelTemplate:
         self.id = _id
 
     def find(self, client) -> discord.TextChannel:
-        from bot_client import CPUBotClient
+        from bot.bot_client import CPUBotClient
         client: CPUBotClient
 
         for channel in client.guild.channels:
@@ -28,7 +28,7 @@ new_members = TextChannelTemplate("new-members", 751496784374661313)
 
 
 async def setup_guild_channels(client):
-    from bot_client import CPUBotClient
+    from bot.bot_client import CPUBotClient
     client: CPUBotClient
 
     client.new_members_channel = new_members.find(client)

@@ -1,4 +1,4 @@
-from bot_client import CPUBotClient
+from bot.bot_client import CPUBotClient
 from env import DISCORD_TOKEN
 
 def run():

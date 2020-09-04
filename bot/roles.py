@@ -13,7 +13,7 @@ class RoleTemplate:
         self.color = color
 
     async def setup(self, client) -> discord.Role:
-        from bot_client import CPUBotClient
+        from bot.bot_client import CPUBotClient
         client: CPUBotClient
 
         role = await self._find(client)
@@ -31,7 +31,7 @@ class RoleTemplate:
         return await client.guild.create_role(name=self.name, color=self.color, **kwargs)
 
     async def _find(self, client) -> Optional[discord.Role]:
-        from bot_client import CPUBotClient
+        from bot.bot_client import CPUBotClient
         client: CPUBotClient
 
         for role in client.guild.roles:
@@ -43,7 +43,7 @@ club_member = RoleTemplate("Club Member", discord.Color.blue())
 
 
 async def setup_guild_roles(client):
-    from bot_client import CPUBotClient
+    from bot.bot_client import CPUBotClient
     client: CPUBotClient
 
     client.club_member_role = await club_member.setup(client)
