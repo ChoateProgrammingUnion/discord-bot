@@ -120,8 +120,7 @@ async def step2_input(user: discord.User, db_user: DBUser, last_name: str):
 
 
 async def step3(user: discord.User, db_user: DBUser):
-    await user.send(f"""Thanks, {db_user.first_name} {db_user.last_name}! Finally, we'll need your Choate email.\n\
-Please type your Choate email address:""")
+    await user.send(templates.email_address.format(**locals()))
 
 
 async def step3_input(client, user: discord.User, db_user: DBUser, choate_email: str):
@@ -166,7 +165,7 @@ async def step5(client, user: discord.User, db_user: DBUser):
     client: CPUBotClient
 
     await finish_registration(client, user, db_user)
-    await user.send("Sounds good! You should now have access to the discord server.")
+    await user.send(templates.finished_registration)
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):

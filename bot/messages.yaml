@@ -17,5 +17,12 @@ last_name: |
   Thanks, {db_user.first_name}! Next, we'll need your last name.
   Please type your last name:
 
+email_address: |
+  Thanks, {db_user.first_name} {db_user.last_name}! Finally, we'll need your Choate email.
+  Please type your Choate email address:
+
+finished_registration: |
+  Sounds good! You should now have access to the discord server.
+
 public_welcome: |
   Welcome to the server, {member.mention}!
