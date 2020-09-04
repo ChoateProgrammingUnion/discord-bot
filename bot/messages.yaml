@@ -1,9 +1,9 @@
 welcome_back: |
-  **Welcome to the CPU discord server!** It seems you have joined the server on this 
+  **Welcome to the CPU Discord server!** It seems you have joined the server on this 
   account before, and your previous info was saved. Is this info still correct?
 
 new_welcome: |
-  **Welcome to the CPU discord server!**
+  **Welcome to the CPU Discord server!**
   Before you can gain access to the server, we need to collect some information about you to make sure you are a Choate student, and so we can add you to our email list.
   The first thing we need is your (real) first name so we can change your nickname in the server.
 
@@ -22,7 +22,7 @@ email_address: |
   Please type your Choate email address:
 
 finished_registration: |
-  Sounds good! You should now have access to the discord server.
+  Sounds good! You should now have access to the Discord server.
 
 public_welcome: |
   Welcome to the server, {member.mention}!
