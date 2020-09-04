@@ -1,9 +1,9 @@
 import discord
 
-import channels
-import roles
+import bot.channels
+import bot.roles
 from env import DISCORD_GUILD_ID
-from utils.logger import info, error
+from bot.utils.logger import info, error
 
 
 class CPUBotClient(discord.Client):
@@ -25,8 +25,8 @@ class CPUBotClient(discord.Client):
 
         info(f"Guild with id {DISCORD_GUILD_ID} found, name={self.guild.name}")
 
-        await roles.setup_guild_roles(self)
-        await channels.setup_guild_channels(self)
+        await bot.roles.setup_guild_roles(self)
+        await bot.channels.setup_guild_channels(self)
 
     async def on_member_join(self, member: discord.Member):
         info(f"{member} has joined the server", header=f"[{member}]")

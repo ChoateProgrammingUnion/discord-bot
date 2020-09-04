@@ -1,6 +1,6 @@
 import discord
 
-from utils.logger import error, info
+from bot.utils.logger import error, info
 
 
 class TextChannelTemplate:

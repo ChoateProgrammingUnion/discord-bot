@@ -1,7 +1,7 @@
 from typing import Optional
 
 import discord
-from utils.logger import info
+from bot.utils.logger import info
 
 
 class RoleTemplate:
