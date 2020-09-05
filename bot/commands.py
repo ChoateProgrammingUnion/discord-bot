@@ -2,6 +2,7 @@ import discord
 from bot.msgs import templates
 import bot.database as db
 import re
+from bot.utils.logger import info, error
 
 ### Message handling functions ###
 
@@ -18,11 +19,13 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
 
     for each_command, function in direct_commands:
         if bool(re.fullmatch(each_command, message.content)):
+            info(each_command + " command function executed")
             responses.append(await function(client, user, message))
 
     if db.check_admin(user):
         for each_command, function in admin_direct_commands:
             if bool(re.fullmatch(each_command, message.content)):
+                info(each_command + " command function executed")
                 responses.append(await function(client, user, message))
 
     return responses
