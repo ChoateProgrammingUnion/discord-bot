@@ -4,12 +4,15 @@ import discord
 import mongoset
 import env
 from mongoset.model import DocumentModel, Immutable, ModelTable
+import yaml
 
 if not env.DATABASE:
     db = mongoset.connect(db_name="discord-bot")
 else:
     db = mongoset.connect(env.DATABASE, db_name="discord-bot")
 
+with open("admin.yaml") as f:
+    admins = yaml.load(f)
 
 class DBUser(DocumentModel):
     discord_id: int = Immutable()
@@ -44,3 +47,11 @@ def get_db_user(user) -> DBUser:
         user_table.create(db_user)
 
     return db_user
+
+def check_admin(user) -> bool:
+    db_user = get_db_user(user)
+    if db_user.discord_id in admins:
+        return True
+
+    return False
+
