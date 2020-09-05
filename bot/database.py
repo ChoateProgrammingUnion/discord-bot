@@ -14,6 +14,7 @@ else:
 with open("admin.yaml") as f:
     admins = yaml.load(f)
 
+
 class DBUser(DocumentModel):
     discord_id: int = Immutable()
     registered: bool
@@ -35,9 +36,12 @@ class UserTable(ModelTable[DBUser]):
             return users[0]
 
         from bot.utils.logger import error
+
         error(f"More than one user matches the id {user.id}")
 
+
 user_table = UserTable(db["user"])
+
 
 def get_db_user(user) -> DBUser:
     db_user = user_table.find_discord_user(user)
@@ -48,10 +52,10 @@ def get_db_user(user) -> DBUser:
 
     return db_user
 
+
 def check_admin(user) -> bool:
     db_user = get_db_user(user)
     if db_user.discord_id in admins:
         return True
 
     return False
-

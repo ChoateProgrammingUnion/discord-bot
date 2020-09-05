@@ -14,6 +14,7 @@ from bot.msgs import templates
 
 from bot.utils.logger import info, error
 
+
 async def handle_join_server(client, user: discord.Member):
     db_user = get_db_user(user)
 
@@ -23,7 +24,10 @@ async def handle_join_server(client, user: discord.Member):
 
     if db_user.registered:
         db_user.registration_step = 0
-        info("User has already registered, setting registration step to 0", header=f"[{user}]")
+        info(
+            "User has already registered, setting registration step to 0",
+            header=f"[{user}]",
+        )
 
     await step0(client, user, db_user)
 
@@ -32,6 +36,7 @@ async def handle_join_server(client, user: discord.Member):
 
 async def finish_registration(client, user: discord.User, db_user: DBUser):
     from bot.bot_client import CPUBotClient
+
     client: CPUBotClient
 
     db_user.registered = True
@@ -52,38 +57,44 @@ async def finish_registration(client, user: discord.User, db_user: DBUser):
 
 async def step0(client, user: discord.User, db_user: DBUser):
     from bot.bot_client import CPUBotClient
+
     client: CPUBotClient
 
     # Create embed
-    info_embed = discord.Embed(title="User Info", color=0x0000ff)
+    info_embed = discord.Embed(title="User Info", color=0x0000FF)
     info_embed.add_field(name="__First Name__", value=db_user.first_name)
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
     # Send message and add reactions
     message = await user.send(templates.welcome_back, embed=info_embed)
-    await message.add_reaction('👍')
-    await message.add_reaction('👎')
+    await message.add_reaction("👍")
+    await message.add_reaction("👎")
     info("Verification message sent, waiting for user reaction...", header=f"[{user}]")
 
     # Wait for user reaction
     def check(r: discord.Reaction, u: discord.User):
-        return r.message.id == message.id and r.emoji in ['👍', '👎'] and u.id != client.user.id
-    res = await client.wait_for('reaction_add', check=check)
+        return (
+            r.message.id == message.id
+            and r.emoji in ["👍", "👎"]
+            and u.id != client.user.id
+        )
+
+    res = await client.wait_for("reaction_add", check=check)
     reaction: discord.reaction = res[0]
     info(f"User reacted with emoji '{reaction.emoji}'", header=f"[{user}]")
 
-    if reaction.emoji == '👍':
-        await message.remove_reaction('👍', client.user)
-        await message.remove_reaction('👎', client.user)
+    if reaction.emoji == "👍":
+        await message.remove_reaction("👍", client.user)
+        await message.remove_reaction("👎", client.user)
         db_user.registered = True
         db_user.registration_step = 5
         user_table.update(db_user)
         await step5(client, user, db_user)
 
-    elif reaction.emoji == '👎':
-        await message.remove_reaction('👍', client.user)
-        await message.remove_reaction('👎', client.user)
+    elif reaction.emoji == "👎":
+        await message.remove_reaction("👍", client.user)
+        await message.remove_reaction("👎", client.user)
         db_user.registered = False
         db_user.registration_step = 1
         user_table.update(db_user)
@@ -127,39 +138,48 @@ async def step3_input(client, user: discord.User, db_user: DBUser, choate_email:
 
 async def step4(client, user: discord.User, db_user: DBUser):
     from bot.bot_client import CPUBotClient
+
     client: CPUBotClient
 
     # Create Embed
-    info_embed = discord.Embed(title="User Info", color=0x0000ff)
+    info_embed = discord.Embed(title="User Info", color=0x0000FF)
     info_embed.add_field(name="__First Name__", value=db_user.first_name)
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
     # Send message and add reactions
-    message = await user.send(f"""Thanks! Is all of this info correct?""", embed=info_embed)
-    await message.add_reaction('👍')
-    await message.add_reaction('👎')
+    message = await user.send(
+        f"""Thanks! Is all of this info correct?""", embed=info_embed
+    )
+    await message.add_reaction("👍")
+    await message.add_reaction("👎")
 
     # Wait for user reaction
     def check(r: discord.Reaction, u: discord.User):
-        return r.message.id == message.id and r.emoji in ['👍', '👎'] and u.id != client.user.id
-    res = await client.wait_for('reaction_add', check=check)
+        return (
+            r.message.id == message.id
+            and r.emoji in ["👍", "👎"]
+            and u.id != client.user.id
+        )
+
+    res = await client.wait_for("reaction_add", check=check)
     reaction: discord.reaction = res[0]
 
-    if reaction.emoji == '👍':
-        await message.remove_reaction('👍', client.user)
-        await message.remove_reaction('👎', client.user)
+    if reaction.emoji == "👍":
+        await message.remove_reaction("👍", client.user)
+        await message.remove_reaction("👎", client.user)
         db_user.registration_step = 5
         user_table.update(db_user)
         await step5(client, user, db_user)
 
-    elif reaction.emoji == '👎':
-        await message.remove_reaction('👍', client.user)
-        await message.remove_reaction('👎', client.user)
+    elif reaction.emoji == "👎":
+        await message.remove_reaction("👍", client.user)
+        await message.remove_reaction("👎", client.user)
 
 
 async def step5(client, user: discord.User, db_user: DBUser):
     from bot.bot_client import CPUBotClient
+
     client: CPUBotClient
 
     await finish_registration(client, user, db_user)
@@ -180,6 +200,7 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
 
 async def welcome_user(client, member: discord.Member):
     from bot.bot_client import CPUBotClient
+
     client: CPUBotClient
 
     await client.new_members_channel.send(templates.public_welcome.format(**locals()))
