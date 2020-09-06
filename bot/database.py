@@ -5,6 +5,8 @@ import mongoset
 import env
 from mongoset.model import DocumentModel, Immutable, ModelTable
 import yaml
+import validators
+from pydantic import validator
 
 if not env.DATABASE:
     db = mongoset.connect(db_name="discord-bot")
@@ -22,6 +24,13 @@ class DBUser(DocumentModel):
     first_name: Optional[str]
     last_name: Optional[str]
     choate_email: Optional[str]
+
+    @validator("choate_email")
+    def validate_email(cls, v):
+        if validators.email(v):
+            return v
+        else:
+            raise ValueError("Email validation failed")
 
 
 class UserTable(ModelTable[DBUser]):
