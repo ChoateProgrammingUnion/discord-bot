@@ -6,13 +6,16 @@ from bot.utils.logger import info, error
 
 ### Message handling functions ###
 
+
 async def get_help(client, user: discord.user, message: discord.Message):
     return await user.send(templates.help)
 
+
 ### Message routing ###
 
-direct_commands = [(r"help", get_help)] # allows for regex expressions
-admin_direct_commands = [] # allows for regex expressions
+direct_commands = [(r"help", get_help)]  # allows for regex expressions
+admin_direct_commands = []  # allows for regex expressions
+
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
     responses = []
@@ -29,5 +32,3 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
                 responses.append(await function(client, user, message))
 
     return responses
-
-
