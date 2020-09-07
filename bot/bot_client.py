@@ -2,8 +2,8 @@ import discord
 
 from bot import register, commands, channels, roles
 from bot.database import get_db_user, user_table
+from bot.msgs import templates
 from env import DISCORD_GUILD_ID
-from bot.msg import templates
 from bot.utils.logger import info, error, warning
 
 
@@ -46,7 +46,7 @@ class CPUBotClient(discord.Client):
                             info("Existing member found in db, bot gave user Club Member role", header=f"[{member}]")
                 else:
                     if self.club_member_role in member.roles:
-                        warning("Unregistered member found in db, has Club Member role for some reason")
+                        warning("Unregistered member found in db, has Club Member role for some reason", header=f"[{member}]")
                     else:
                         info("Unregistered member found in db, doesn't has Club Member role", header=f"[{member}]")
             else:
@@ -65,8 +65,9 @@ class CPUBotClient(discord.Client):
                 responses = await commands.handle_dm(self, message.author, message)
 
                 if len(responses) == 0:  # No commands were executed
+                    executed = False
                     if not get_db_user(message.author).registered:  # is registered
                         executed = await register.handle_dm(self, message.author, message)
 
                     if not executed: # Nothing really happened
-                        message.author.send(templates.help)
+                        await message.author.send(templates.help)
