@@ -33,5 +33,6 @@ help: |
   Commands:
     `help`: Prints this message
     `register`: Starts the CPU bot registration flow
+    `info`: Prints your user info
 
   This bot is open source at https://github.com/ChoateProgrammingUnion/discord-bot. Pull requests and other forms of contribution are welcomed and encouraged!

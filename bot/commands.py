@@ -22,6 +22,7 @@ async def get_info(client, user: discord.user, message: discord.Message):
 
 async def register(client, user: discord.user, message: discord.Message):
     db_user = db.get_db_user(user)
+    db_user.registered = False
     db_user.registration_step = 1
     db.user_table.update(db_user)
     info("User not registered, setting registration step to 1", header=f"[{user}]")
