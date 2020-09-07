@@ -18,14 +18,14 @@ async def get_info(client, user: discord.user, message: discord.Message):
     info_embed.add_field(name="__First Name__", value=db_user.first_name)
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
-    await user.send(embed=info_embed)
+    return await user.send(embed=info_embed)
 
 async def register(client, user: discord.user, message: discord.Message):
     db_user = db.get_db_user(user)
     db_user.registration_step = 1
     db.user_table.update(db_user)
     info("User not registered, setting registration step to 1", header=f"[{user}]")
-    await step1(user)
+    return await step1(user)
 
 ### Message routing ###
 
