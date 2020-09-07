@@ -24,6 +24,7 @@ class DBUser(DocumentModel):
     first_name: Optional[str]
     last_name: Optional[str]
     choate_email: Optional[str]
+    opt_out_email: bool
 
     @validator("choate_email")
     def validate_email(cls, v):
