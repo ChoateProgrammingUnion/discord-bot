@@ -3,6 +3,7 @@ import discord
 from bot import register, commands, channels, roles
 from bot.database import get_db_user, user_table
 from env import DISCORD_GUILD_ID
+from bot.msg import templates
 from bot.utils.logger import info, error, warning
 
 
@@ -65,4 +66,7 @@ class CPUBotClient(discord.Client):
 
                 if len(responses) == 0:  # No commands were executed
                     if not get_db_user(message.author).registered:  # is registered
-                        await register.handle_dm(self, message.author, message)
+                        executed = await register.handle_dm(self, message.author, message)
+
+                    if not executed: # Nothing really happened
+                        message.author.send(templates.help)

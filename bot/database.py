@@ -4,6 +4,7 @@ import discord
 import mongoset
 import env
 from mongoset.model import DocumentModel, Immutable, ModelTable
+from bot.msgs import templates
 import yaml
 import validators
 from pydantic import validator

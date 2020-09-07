@@ -154,7 +154,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
-    # Send message and add reactions
+  # Nothing really happened   # Send message and add reactions
     message = await user.send(
         f"""Thanks! Is all of this info correct?""", embed=info_embed
     )
@@ -198,6 +198,7 @@ async def step5(client, user: discord.User, db_user: DBUser):
 
     await finish_registration(client, user, db_user)
     await user.send(templates.finished_registration)
+    await user.send(templates.help)
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
@@ -206,15 +207,21 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
     if not db_user.registered:
         if db_user.registration_step == 1:
             await step1_input(user, db_user, message.content)
+            return True
         elif db_user.registration_step == 2:
             await step2_input(user, db_user, message.content)
+            return True
         elif db_user.registration_step == 3:
             await step3_input(client, user, db_user, message.content)
+            return True
         elif message.content == "reset":
             db_user.registered = False
             db_user.registration_step = 1
             user_table.update(db_user)
             await step1(user)
+            return True
+
+    return False
 
 
 async def welcome_user(client, member: discord.Member):
