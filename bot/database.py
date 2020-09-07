@@ -9,9 +9,9 @@ import validators
 from pydantic import validator
 
 if not env.DATABASE:
-    db = mongoset.connect(db_name="discord-bot")
+    db = mongoset.connect(db_name=env.DATABASE_COLLECTION)
 else:
-    db = mongoset.connect(env.DATABASE, db_name="discord-bot")
+    db = mongoset.connect(env.DATABASE, db_name=env.DATABASE_COLLECTION)
 
 with open("admin.yaml") as f:
     admins = yaml.load(f)

@@ -102,8 +102,9 @@ async def step0(client, user: discord.User, db_user: DBUser):
         await step1(user)
 
 
-async def step1(user: discord.User):
-    await user.send(templates.new_welcome)
+async def step1(user: discord.User, welcome=True):
+    if welcome:
+        await user.send(templates.new_welcome)
     await user.send(templates.first_name)
 
 
@@ -175,6 +176,10 @@ async def step4(client, user: discord.User, db_user: DBUser):
     elif reaction.emoji == "👎":
         await message.remove_reaction("👍", client.user)
         await message.remove_reaction("👎", client.user)
+        await user.send("Ok, asking for the info again.")
+        db_user.registration_step = 1
+        user_table.update(db_user)
+        await step1(user, welcome=False)
 
 
 async def step5(client, user: discord.User, db_user: DBUser):
@@ -196,6 +201,11 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
             await step2_input(user, db_user, message.content)
         elif db_user.registration_step == 3:
             await step3_input(client, user, db_user, message.content)
+        elif message.content == "reset":
+            db_user.registered = False
+            db_user.registration_step = 1
+            user_table.update(db_user)
+            await step1(user)
 
 
 async def welcome_user(client, member: discord.Member):
