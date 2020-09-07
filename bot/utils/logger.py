@@ -149,6 +149,21 @@ class Logger:
         return cls()._log_function(log.error, str(msg), header, frame, traceback_length)
 
     @classmethod
+    def log_warning(
+        cls, msg: str, header=None, frame=None, traceback_length: int = 5
+    ) -> str:
+        """
+        Logs errors
+        """
+        log = logging.getLogger(__name__)
+        if frame:
+            frame = frame.f_back
+        else:
+            frame = inspect.currentframe().f_back
+
+        return cls()._log_function(log.warning, str(msg), header, frame, traceback_length)
+
+    @classmethod
     def print_function_call(cls, params=None, header="") -> str:
         """
         Prints function calls and details associated with the call
@@ -179,3 +194,5 @@ class Logger:
 
 info = Logger.log_info
 error = Logger.log_error
+warning = Logger.log_warning
+warn = warning

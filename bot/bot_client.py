@@ -1,9 +1,9 @@
 import discord
 
 from bot import register, commands, channels, roles
-from bot.database import get_db_user
+from bot.database import get_db_user, user_table
 from env import DISCORD_GUILD_ID
-from bot.utils.logger import info, error
+from bot.utils.logger import info, error, warning
 
 
 class CPUBotClient(discord.Client):
@@ -27,6 +27,29 @@ class CPUBotClient(discord.Client):
 
         await roles.setup_guild_roles(self)
         await channels.setup_guild_channels(self)
+
+        info("Checking existing guild members...")
+        for member in self.guild.members:
+            member: discord.Member
+            if db_user := user_table.find_discord_user(member):
+                if db_user.registered:
+                    if self.club_member_role in member.roles:
+                        info("Existing member found in db, already has Club Member role", header=f"[{member}]")
+                    else:
+                        try:
+                            await member.add_roles(self.club_member_role)
+                        except discord.Forbidden:
+                            error("Existing member found in db, but bot lacks permission to give "
+                                  "Club Member role to this user.", header=f"[{member}]")
+                        else:
+                            info("Existing member found in db, bot gave user Club Member role", header=f"[{member}]")
+                else:
+                    if self.club_member_role in member.roles:
+                        warning("Unregistered member found in db, has Club Member role for some reason")
+                    else:
+                        info("Unregistered member found in db, doesn't has Club Member role", header=f"[{member}]")
+            else:
+                info("User not found in db", header=f"[{member}]")
 
     async def on_member_join(self, member: discord.Member):
         if member.guild.id != self.guild.id:

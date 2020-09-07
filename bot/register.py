@@ -20,18 +20,16 @@ async def handle_join_server(client, user: discord.Member):
 
     info("Added user to database", header=f"[{user}]")
 
-    db_user.registration_step = 1
-
     if db_user.registered:
         db_user.registration_step = 0
-        info(
-            "User has already registered, setting registration step to 0",
-            header=f"[{user}]",
-        )
-
-    await step0(client, user, db_user)
-
-    user_table.update(db_user)
+        user_table.update(db_user)
+        info("User has already registered, setting registration step to 0", header=f"[{user}]")
+        await step0(client, user, db_user)
+    else:
+        db_user.registration_step = 1
+        user_table.update(db_user)
+        info("User not registered, setting registration step to 1", header=f"[{user}]")
+        await step1(user)
 
 
 async def finish_registration(client, user: discord.User, db_user: DBUser):
@@ -39,6 +37,7 @@ async def finish_registration(client, user: discord.User, db_user: DBUser):
 
     client: CPUBotClient
 
+    info("Finishing user registration", header=f"[{user}]")
     db_user.registered = True
     user_table.update(db_user)
 
@@ -113,6 +112,7 @@ async def step1(user: discord.User, welcome=True):
 
 
 async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
+    info(f'User provided first name "{first_name}"', header=f"[{user}]")
     db_user.first_name = first_name
     db_user.registration_step = 2
     user_table.update(db_user)
@@ -124,6 +124,7 @@ async def step2(user: discord.User, db_user: DBUser):
 
 
 async def step2_input(user: discord.User, db_user: DBUser, last_name: str):
+    info(f'User provided last name "{last_name}"', header=f"[{user}]")
     db_user.last_name = last_name
     db_user.registration_step = 3
     user_table.update(db_user)
@@ -135,6 +136,7 @@ async def step3(user: discord.User, db_user: DBUser):
 
 
 async def step3_input(client, user: discord.User, db_user: DBUser, choate_email: str):
+    info(f'User provided Choate email "{choate_email}"', header=f"[{user}]")
     db_user.choate_email = choate_email
     db_user.registration_step = 4
     user_table.update(db_user)
@@ -158,6 +160,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
     )
     await message.add_reaction("👍")
     await message.add_reaction("👎")
+    info("Verification message sent", header=f"[{user}]")
 
     # Wait for user reaction
     def check(r: discord.Reaction, u: discord.User):
@@ -169,6 +172,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
 
     res = await client.wait_for("reaction_add", check=check)
     reaction: discord.reaction = res[0]
+    info(f"User reacted with emoji '{reaction.emoji}'", header=f"[{user}]")
 
     if reaction.emoji == "👍":
         await message.remove_reaction("👍", client.user)
@@ -181,6 +185,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
         await message.remove_reaction("👍", client.user)
         await message.remove_reaction("👎", client.user)
         await user.send("Ok, asking for the info again.")
+        info("User rejected the info, restarting at step 1", header=f"[{user}]")
         db_user.registration_step = 1
         user_table.update(db_user)
         await step1(user, welcome=False)
