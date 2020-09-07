@@ -17,7 +17,7 @@ async def get_info(client, user: discord.user, message: discord.Message):
     info_embed.add_field(name="__First Name__", value=db_user.first_name)
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
-    await user.send(templates.welcome_back, embed=info_embed)
+    await user.send(embed=info_embed)
 
 
 ### Message routing ###
