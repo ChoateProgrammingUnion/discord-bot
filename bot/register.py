@@ -47,11 +47,15 @@ async def finish_registration(client, user: discord.User, db_user: DBUser):
         if member.id == user.id:
             break
     else:
-        error(f"User not found in guild, cannot complete registration")
+        error(f"User not found in guild, cannot complete registration", header=f"[{user}]")
         return
 
-    await member.edit(nick=f"{db_user.first_name} {db_user.last_name}")
-    await member.add_roles(client.club_member_role)
+    try:
+        await member.edit(nick=f"{db_user.first_name} {db_user.last_name}")
+        await member.add_roles(client.club_member_role)
+    except discord.Forbidden:
+        error("User registered, but bot lacks permission to edit user, are they the server owner?", header=f"[{user}]")
+
     await welcome_user(client, member)
 
 

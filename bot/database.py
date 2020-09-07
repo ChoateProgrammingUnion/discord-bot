@@ -14,7 +14,7 @@ else:
     db = mongoset.connect(env.DATABASE, db_name=env.DATABASE_COLLECTION)
 
 with open("admin.yaml") as f:
-    admins = yaml.load(f)
+    admins = yaml.safe_load(f)
 
 
 class DBUser(DocumentModel):
