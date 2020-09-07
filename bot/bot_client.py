@@ -61,7 +61,8 @@ class CPUBotClient(discord.Client):
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.DMChannel):
             if isinstance(message.author, discord.User):
-                await commands.handle_dm(self, message.author, message)
+                responses = await commands.handle_dm(self, message.author, message)
 
-                if not get_db_user(message.author).registered:  # is registered
-                    await register.handle_dm(self, message.author, message)
+                if len(responses) == 0:  # No commands were executed
+                    if not get_db_user(message.author).registered:  # is registered
+                        await register.handle_dm(self, message.author, message)

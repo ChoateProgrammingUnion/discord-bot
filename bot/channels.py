@@ -28,7 +28,7 @@ class TextChannelTemplate:
         error(f"Text channel with id {self.id} not found", header=f"[{self.name}]")
 
 
-new_members = TextChannelTemplate("new-members", 751496784374661313)
+new_members = TextChannelTemplate("new-members", 480366530404548608)
 
 
 async def setup_guild_channels(client):
