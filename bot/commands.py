@@ -1,6 +1,7 @@
 import discord
 from bot.msgs import templates
 import bot.database as db
+from bot.register import step1
 import re
 from bot.utils.logger import info, error
 
@@ -19,10 +20,16 @@ async def get_info(client, user: discord.user, message: discord.Message):
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
     await user.send(templates.welcome_back, embed=info_embed)
 
+async def register(client, user: discord.user, message: discord.Message):
+    db_user = db.get_db_user(user)
+    db_user.registration_step = 1
+    db.user_table.update(db_user)
+    info("User not registered, setting registration step to 1", header=f"[{user}]")
+    await step1(user)
 
 ### Message routing ###
 
-direct_commands = [(r"help", get_help), (r"info", get_info)]  # allows for regex expressions
+direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register)]  # allows for regex expressions
 admin_direct_commands = []  # allows for regex expressions
 
 
