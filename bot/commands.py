@@ -28,10 +28,24 @@ async def register(client, user: discord.user, message: discord.Message):
     info("User not registered, setting registration step to 1", header=f"[{user}]")
     return await step1(user)
 
+### Admin commands ###
+
+async def email(client, user: discord.user, message: discord.Message):
+    db_user = db.get_db_user(user)
+    info("Iterating over each user to get each email")
+    if db_user.discord_id in db.admins: # admin double check
+        emails = []
+        for each_user in db.user_table.all():
+            if each_user.choate_email:
+                emails.append(each_user.choate_email)
+
+    info("Sending email list")
+    return await user.send("\n".join(emails))
+
 ### Message routing ###
 
 direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register)]  # allows for regex expressions
-admin_direct_commands = []  # allows for regex expressions
+admin_direct_commands = [(r"email", email)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):

@@ -35,4 +35,7 @@ help: |
     `register`: Starts the CPU bot registration flow
     `info`: Prints your user info
 
+  Admin commands:
+    `email`: Prints the entire email list
+
   This bot is open source at https://github.com/ChoateProgrammingUnion/discord-bot. Pull requests and other forms of contribution are welcomed and encouraged!
