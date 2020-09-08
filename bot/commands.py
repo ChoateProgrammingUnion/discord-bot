@@ -59,7 +59,7 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
     if db.check_admin(user):
         for each_command, function in admin_direct_commands:
             if bool(re.fullmatch(each_command, message.content)):
-                info(each_command + " command function executed")
+                info(each_command + " command function executed by " + db.get_db_user(user).choate_email)
                 responses.append(await function(client, user, message))
 
     return responses
