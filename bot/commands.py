@@ -51,14 +51,17 @@ admin_direct_commands = [(r"email", email)]  # allows for regex expressions
 async def handle_dm(client, user: discord.User, message: discord.Message):
     responses = []
 
+    message_str = message.content
+    message_str = message_str.lower()
+
     for each_command, function in direct_commands:
-        if bool(re.fullmatch(each_command, message.content)):
+        if bool(re.fullmatch(each_command, message_str)):
             info(each_command + " command function executed", header=f"[{user}]")
             responses.append(await function(client, user, message))
 
     if db.check_admin(user):
         for each_command, function in admin_direct_commands:
-            if bool(re.fullmatch(each_command, message.content)):
+            if bool(re.fullmatch(each_command, message_str)):
                 info(each_command + " command function executed by " + db.get_db_user(user).choate_email + " for " + str(message.content))
                 responses.append(await function(client, user, message))
 
