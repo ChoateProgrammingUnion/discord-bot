@@ -20,4 +20,4 @@ All contributions are welcome -- we welcome PRs, new issues, or simply better do
 All work is done under the GPL license (see LICENSE) for more.
 
 ## Acknowledgments
-Our thanks go to Jerry Wang \'20 (CPU Officer 2018-2019, President 2019-2020), who made the first iteration of CPUBot.
+Our thanks go to Jerie Wang \'20 (CPU Officer 2018-2019, President 2019-2020), who made the first iteration of CPUBot.
