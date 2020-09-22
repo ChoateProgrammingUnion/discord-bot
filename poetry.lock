@@ -142,6 +142,17 @@ zstd = ["zstandard"]
 
 [[package]]
 category = "main"
+description = "Add .env support to your django/flask apps in development and deployments"
+name = "python-dotenv"
+optional = false
+python-versions = "*"
+version = "0.14.0"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
+category = "main"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -184,7 +195,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "c30668e40e3b8c0698822d14293fc71f5e7bf42905b8eb140bfc7824ce3c6c84"
+content-hash = "6f8cd382c589595c046054acfcb44504baf5f66671bcc27c98d748ab6c48e574"
 lock-version = "1.0"
 python-versions = "^3.8.2"
 
@@ -328,6 +339,10 @@ pymongo = [
     {file = "pymongo-3.11.0-cp38-cp38-win_amd64.whl", hash = "sha256:03dc64a9aa7a5d405aea5c56db95835f6a2fa31b3502c5af1760e0e99210be30"},
     {file = "pymongo-3.11.0-py2.7-macosx-10.15-x86_64.egg", hash = "sha256:63a5387e496a98170ffe638b435c0832c0f2011a6f4ff7a2880f17669fff8c03"},
     {file = "pymongo-3.11.0.tar.gz", hash = "sha256:076a7f2f7c251635cf6116ac8e45eefac77758ee5a77ab7bd2f63999e957613b"},
+]
+python-dotenv = [
+    {file = "python-dotenv-0.14.0.tar.gz", hash = "sha256:8c10c99a1b25d9a68058a1ad6f90381a62ba68230ca93966882a4dbc3bc9c33d"},
+    {file = "python_dotenv-0.14.0-py2.py3-none-any.whl", hash = "sha256:c10863aee750ad720f4f43436565e4c1698798d763b63234fb5021b6c616e423"},
 ]
 pyyaml = [
     {file = "PyYAML-5.3.1-cp27-cp27m-win32.whl", hash = "sha256:74809a57b329d6cc0fdccee6318f44b9b8649961fa73144a98735b0aaf029f1f"},

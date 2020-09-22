@@ -10,6 +10,7 @@ python = "^3.8.2"
 mongoset = "^0.3.2"
 pyyaml = "^5.3.1"
 validators = "^0.18.1"
+python-dotenv = "^0.14.0"
 
 [tool.poetry.dev-dependencies]
 
