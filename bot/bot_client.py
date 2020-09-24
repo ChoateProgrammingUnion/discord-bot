@@ -12,6 +12,10 @@ class CPUBotClient(discord.Client):
     club_member_role: discord.Role = None
     new_members_channel: discord.TextChannel = None
 
+    def __init__(self, **options):
+        super().__init__(**options)
+        self.meeting_id = ''
+
     async def on_ready(self):
         info("Client connected to discord")
 
@@ -71,3 +75,9 @@ class CPUBotClient(discord.Client):
 
                     if not executed: # Nothing really happened
                         await message.author.send(templates.help)
+                else:
+                    if type(responses[0]) is tuple:
+                        if len(responses[0]) == 2:
+                            if responses[0][1] == 'm':
+                                info(f"Meeting Code set to {responses[0][0]}")
+                                self.meeting_id = responses[0][0]
