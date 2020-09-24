@@ -43,5 +43,11 @@ help: |
 attendance: |
   Your attendance has been recorded! Thank you for attending!
 
+attendance_found: |
+  You've already recorded your attendance for this meeting!
+
 attendance_set: |
   The attendance code is now:
+
+meeting_end: |
+  The meeting is over. Please relax and grab some refreshments.

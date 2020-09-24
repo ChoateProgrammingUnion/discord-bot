@@ -39,8 +39,10 @@ async def attendance(client, user: discord.user, message: discord.Message):
         if client.meeting_id not in db_user.attendance:
             info(f'Added meeting id to {user}')
             db_user.attendance.append(client.meeting_id)
-        db.user_table.update(db_user)
-        return await user.send(templates.attendance)
+            db.user_table.update(db_user)
+            return await user.send(templates.attendance)
+        return await user.send(templates.attendance_found)
+
 
 ### Admin commands ###
 
@@ -66,10 +68,20 @@ async def start(client, user: discord.user, message: discord.Message):
         await user.send(templates.attendance_set + meeting_code)
         return meeting_code, 'm'
 
+async def end(client, user: discord.user, message: discord.Message):
+    db_user = db.get_db_user(user)
+    info("Validating Admin to end meeting")
+    if db_user.discord_id in db.admins:  # admin double check
+        info("ending meeting")
+        meeting_code = ''
+        await user.send(templates.meeting_end)
+        return meeting_code, 'm'
+
+
 ### Message routing ###
 
 direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register), (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
-admin_direct_commands = [(r"email", email), (r"start", start)]  # allows for regex expressions
+admin_direct_commands = [(r"email", email), (r"start", start), (r"end", end)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
