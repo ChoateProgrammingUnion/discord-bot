@@ -4,6 +4,7 @@ import bot.database as db
 from bot.register import step1
 import re
 from bot.utils.logger import info, error
+import secrets
 
 ### Message handling functions ###
 
@@ -28,9 +29,24 @@ async def register(client, user: discord.user, message: discord.Message):
     info("User not registered, setting registration step to 1", header=f"[{user}]")
     return await step1(user)
 
+async def attendance(client, user: discord.user, message: discord.Message):  #called upon attendance code dm, the attendance code is then added to a list of attended meetings by that user
+    db_user = db.get_db_user(user)
+    info(f"Checking meeting id {client.meeting_id} for {user} who said {message.content}")
+    if secrets.compare_digest(message.content, client.meeting_id):
+        info(f"Approved meeting id for {user}")
+        if db_user.attendance is None:
+            db_user.attendance = []
+        if client.meeting_id not in db_user.attendance:
+            info(f'Added meeting id to {user}')
+            db_user.attendance.append(client.meeting_id)
+            db.user_table.update(db_user)
+            return await user.send(templates.attendance)
+        return await user.send(templates.attendance_found)
+
+
 ### Admin commands ###
 
-async def email(client, user: discord.user, message: discord.Message):
+async def email(client, user: discord.user, message: discord.Message):  # sends all choate email addresses for the purposes of a mailing list
     db_user = db.get_db_user(user)
     info("Iterating over each user to get each email")
     if db_user.discord_id in db.admins: # admin double check
@@ -42,10 +58,42 @@ async def email(client, user: discord.user, message: discord.Message):
     info("Sending email list")
     return await user.send("\n".join(emails))
 
+async def start(client, user: discord.user, message: discord.Message):  # begins meeting by generating attendance code and setting it to be active
+    db_user = db.get_db_user(user)
+    info("Validating Admin to Create meeting Code")
+    if db_user.discord_id in db.admins: # admin double check
+        info("Creating Code")
+        meeting_code = secrets.token_hex(4)
+        info(f"Code: {meeting_code}")
+        await user.send(templates.attendance_set + meeting_code)
+        return meeting_code, 'm'
+
+async def end(client, user: discord.user, message: discord.Message):  # ends meeting by setting the meeting code to an empty string
+    db_user = db.get_db_user(user)
+    info("Validating Admin to end meeting")
+    if db_user.discord_id in db.admins:  # admin double check
+        info("ending meeting")
+        meeting_code = ''
+        await user.send(templates.meeting_end)
+        return meeting_code, 'm'
+
+async def get_attendance(client, user: discord.user, message: discord.Message):  # sends attendance for each user who has an attendance entry
+    db_user = db.get_db_user(user)
+    info("Iterating over each user to get each attendance")
+    if db_user.discord_id in db.admins: # admin double check
+        attendances = []
+        for each_user in db.user_table.all():
+            if each_user.attendance and each_user.choate_email:
+                attendances.append(f'{each_user.choate_email} | {len(each_user.attendance)}')
+
+    info("Sending Attendances")
+    return await user.send("\n".join(attendances))
+
+
 ### Message routing ###
 
-direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register)]  # allows for regex expressions
-admin_direct_commands = [(r"email", email)]  # allows for regex expressions
+direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register), (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
+admin_direct_commands = [(r"email", email), (r"start", start), (r"end", end), (r"get-attendance", get_attendance)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
