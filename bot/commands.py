@@ -1,5 +1,5 @@
 import discord
-from bot.msgs import templates
+from bot.msgs import templates, send
 import bot.database as db
 from bot.register import step1
 import re
@@ -9,7 +9,7 @@ from bot.utils.logger import info, error
 
 
 async def get_help(client, user: discord.user, message: discord.Message):
-    return await user.send(templates.help)
+    return await send(user, templates.help)
 
 
 async def get_info(client, user: discord.user, message: discord.Message):
@@ -18,7 +18,7 @@ async def get_info(client, user: discord.user, message: discord.Message):
     info_embed.add_field(name="__First Name__", value=db_user.first_name)
     info_embed.add_field(name="__Last Name__", value=db_user.last_name)
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
-    return await user.send(embed=info_embed)
+    return await send(user, "", embed=info_embed)
 
 async def register(client, user: discord.user, message: discord.Message):
     db_user = db.get_db_user(user)
@@ -40,7 +40,7 @@ async def email(client, user: discord.user, message: discord.Message):
                 emails.append(each_user.choate_email)
 
     info("Sending email list")
-    return await user.send("\n".join(emails))
+    return await send(user, "\n".join(emails))
 
 ### Message routing ###
 
@@ -63,3 +63,4 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
                 responses.append(await function(client, user, message))
 
     return responses
+

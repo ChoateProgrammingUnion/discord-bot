@@ -1,7 +1,7 @@
 import discord
 
 from bot.database import user_table, DBUser, get_db_user
-from bot.msgs import templates
+from bot.msgs import templates, send
 
 
 # REGISTRATION STEPS
@@ -70,7 +70,7 @@ async def step0(client, user: discord.User, db_user: DBUser):
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
     # Send message and add reactions
-    message = await user.send(templates.welcome_back, embed=info_embed)
+    message = await send(user, templates.welcome_back, embed=info_embed)
     await message.add_reaction("👍")
     await message.add_reaction("👎")
     info("Verification message sent, waiting for user reaction...", header=f"[{user}]")
@@ -101,14 +101,14 @@ async def step0(client, user: discord.User, db_user: DBUser):
         db_user.registered = False
         db_user.registration_step = 1
         user_table.update(db_user)
-        await user.send(templates.reset)
-        await step1(user)
+        await send(user, templates.reset)
+        await step1(user, user)
 
 
 async def step1(user: discord.User, welcome=True):
     if welcome:
-        await user.send(templates.new_welcome)
-    await user.send(templates.first_name)
+        await send(user, templates.new_welcome)
+    await send(user, templates.first_name)
 
 
 async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
@@ -120,7 +120,7 @@ async def step1_input(user: discord.User, db_user: DBUser, first_name: str):
 
 
 async def step2(user: discord.User, db_user: DBUser):
-    await user.send(templates.last_name.format(**locals()))
+    await send(user, templates.last_name.format(**locals()))
 
 
 async def step2_input(user: discord.User, db_user: DBUser, last_name: str):
@@ -132,7 +132,7 @@ async def step2_input(user: discord.User, db_user: DBUser, last_name: str):
 
 
 async def step3(user: discord.User, db_user: DBUser):
-    await user.send(templates.email_address.format(**locals()))
+    await send(user, templates.email_address.format(**locals()))
 
 
 async def step3_input(client, user: discord.User, db_user: DBUser, choate_email: str):
@@ -155,7 +155,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
 
   # Nothing really happened   # Send message and add reactions
-    message = await user.send(
+    message = await send(user,
         f"""Thanks! Is all of this info correct?""", embed=info_embed
     )
     await message.add_reaction("👍")
@@ -184,7 +184,7 @@ async def step4(client, user: discord.User, db_user: DBUser):
     elif reaction.emoji == "👎":
         await message.remove_reaction("👍", client.user)
         await message.remove_reaction("👎", client.user)
-        await user.send("Ok, asking for the info again.")
+        await send(user, "Ok, asking for the info again.")
         info("User rejected the info, restarting at step 1", header=f"[{user}]")
         db_user.registration_step = 1
         user_table.update(db_user)
@@ -197,8 +197,8 @@ async def step5(client, user: discord.User, db_user: DBUser):
     client: CPUBotClient
 
     await finish_registration(client, user, db_user)
-    await user.send(templates.finished_registration)
-    await user.send(templates.help)
+    await send(user, templates.finished_registration)
+    await send(user, templates.help)
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):

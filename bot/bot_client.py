@@ -2,7 +2,8 @@ import discord
 
 from bot import register, commands, channels, roles
 from bot.database import get_db_user, user_table
-from bot.msgs import templates
+from itertools import zip_longest
+from bot.msgs import templates, send
 from env import DISCORD_GUILD_ID
 from bot.utils.logger import info, error, warning
 
@@ -70,4 +71,5 @@ class CPUBotClient(discord.Client):
                         executed = await register.handle_dm(self, message.author, message)
 
                     if not executed: # Nothing really happened
-                        await message.author.send(templates.help)
+                        # await message.author.send(templates.help)
+                        await commands.send(message.author, templates.help)
