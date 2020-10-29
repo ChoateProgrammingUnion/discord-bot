@@ -92,8 +92,8 @@ async def get_attendance(client, user: discord.user, message: discord.Message): 
 
 ### Message routing ###
 
-direct_commands = [(r"help", get_help), (r"info", get_info), (r"register", register), (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
-admin_direct_commands = [(r"email", email), (r"start", start), (r"end", end), (r"get-attendance", get_attendance)]  # allows for regex expressions
+direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register), (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
+admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end), (r"(?i)get-attendance", get_attendance)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
