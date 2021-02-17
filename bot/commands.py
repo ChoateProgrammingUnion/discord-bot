@@ -62,11 +62,15 @@ async def start(client, user: discord.user, message: discord.Message):  # begins
     db_user = db.get_db_user(user)
     info("Validating Admin to Create meeting Code")
     if db_user.discord_id in db.admins: # admin double check
-        info("Creating Code")
-        meeting_code = secrets.token_hex(4)
-        info(f"Code: {meeting_code}")
-        await user.send(templates.attendance_set + meeting_code)
-        return meeting_code, 'm'
+        info("Checking for existing code")
+        if not client.meeting_id:
+            info("Creating Code")
+            meeting_code = secrets.token_hex(4)
+            info(f"Code: {meeting_code}")
+            await user.send(templates.attendance_set + meeting_code)
+            return meeting_code, 'm'
+        else:
+            return await user.send(templates.attendance_set_failed)
 
 async def end(client, user: discord.user, message: discord.Message):  # ends meeting by setting the meeting code to an empty string
     db_user = db.get_db_user(user)

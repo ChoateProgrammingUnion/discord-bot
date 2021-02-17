@@ -49,5 +49,8 @@ attendance_found: |
 attendance_set: |
   The attendance code is now:
 
+attendance_set_failed: |
+  Attendance code already exists. Please end the meeting.
+
 meeting_end: |
   The meeting is over. Please relax and grab some refreshments.
