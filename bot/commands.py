@@ -70,7 +70,7 @@ async def start(client, user: discord.user, message: discord.Message):  # begins
             await user.send(templates.attendance_set + meeting_code)
             return meeting_code, 'm'
         else:
-            return await user.send(templates.attendance_set_failed)
+            return await user.send(f'{templates.attendance_set_failed} Here is the current meeting code: {client.meeting_id}')
 
 async def end(client, user: discord.user, message: discord.Message):  # ends meeting by setting the meeting code to an empty string
     db_user = db.get_db_user(user)
