@@ -37,6 +37,9 @@ help: |
 
   Admin commands:
     `email`: Prints the entire email list
+    `start`: begins meeting
+    `end`: ends meeting
+    `get-attendance`: Prints attendance for all attending members
 
   This bot is open source at https://github.com/ChoateProgrammingUnion/discord-bot. Pull requests and other forms of contribution are welcomed and encouraged!
 
@@ -54,3 +57,11 @@ attendance_set_failed: |
 
 meeting_end: |
   The meeting is over. Please relax and grab some refreshments.
+
+ctf_flag_acceptance: |
+  Your flag is correct! You earn {problem.points} points!
+
+ctf_flag_rejection: |
+  Your flag is incorrect. Try again!
+
+
