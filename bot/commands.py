@@ -6,7 +6,7 @@ import re
 from bot.utils.logger import info, error
 import secrets
 
-### Message handling functions ###
+""" Message handling functions """
 
 
 async def get_help(client, user: discord.user, message: discord.Message):
@@ -21,6 +21,7 @@ async def get_info(client, user: discord.user, message: discord.Message):
     info_embed.add_field(name="__Choate Email__", value=db_user.choate_email)
     return await send(user, "", embed=info_embed)
 
+
 async def register(client, user: discord.user, message: discord.Message):
     db_user = db.get_db_user(user)
     db_user.registered = False
@@ -29,7 +30,10 @@ async def register(client, user: discord.user, message: discord.Message):
     info("User not registered, setting registration step to 1", header=f"[{user}]")
     return await step1(user)
 
-async def attendance(client, user: discord.user, message: discord.Message):  #called upon attendance code dm, the attendance code is then added to a list of attended meetings by that user
+
+async def attendance(client, user: discord.user,
+                     message: discord.Message):
+    # called upon attendance code dm, the attendance code is then added to a list of attended meetings by that user
     db_user = db.get_db_user(user)
     info(f"Checking meeting id {client.meeting_id} for {user} who said {message.content}")
     if secrets.compare_digest(message.content, client.meeting_id):
@@ -44,12 +48,14 @@ async def attendance(client, user: discord.user, message: discord.Message):  #ca
         return await user.send(templates.attendance_found)
 
 
-### Admin commands ###
+""" Admin commands """
 
-async def email(client, user: discord.user, message: discord.Message):  # sends all choate email addresses for the purposes of a mailing list
+
+async def email(client, user: discord.user,
+                message: discord.Message):  # sends all choate email addresses for the purposes of a mailing list
     db_user = db.get_db_user(user)
     info("Iterating over each user to get each email")
-    if db_user.discord_id in db.admins: # admin double check
+    if db_user.discord_id in db.admins:  # admin double check
         emails = []
         for each_user in db.user_table.all():
             if each_user.choate_email:
@@ -58,10 +64,12 @@ async def email(client, user: discord.user, message: discord.Message):  # sends 
     info("Sending email list")
     return await send(user, "\n".join(emails))
 
-async def start(client, user: discord.user, message: discord.Message):  # begins meeting by generating attendance code and setting it to be active
+
+async def start(client, user: discord.user,
+                message: discord.Message):  # begins meeting by generating attendance code and setting it to be active
     db_user = db.get_db_user(user)
     info("Validating Admin to Create meeting Code")
-    if db_user.discord_id in db.admins: # admin double check
+    if db_user.discord_id in db.admins:  # admin double check
         info("Checking for existing code")
         if not client.meeting_id:
             info("Creating Code")
@@ -70,9 +78,12 @@ async def start(client, user: discord.user, message: discord.Message):  # begins
             await user.send(templates.attendance_set + meeting_code)
             return meeting_code, 'm'
         else:
-            return await user.send(f'{templates.attendance_set_failed} Here is the current meeting code: {client.meeting_id}')
+            return await user.send(
+                f'{templates.attendance_set_failed} Here is the current meeting code: {client.meeting_id}')
 
-async def end(client, user: discord.user, message: discord.Message):  # ends meeting by setting the meeting code to an empty string
+
+async def end(client, user: discord.user,
+              message: discord.Message):  # ends meeting by setting the meeting code to an empty string
     db_user = db.get_db_user(user)
     info("Validating Admin to end meeting")
     if db_user.discord_id in db.admins:  # admin double check
@@ -81,10 +92,12 @@ async def end(client, user: discord.user, message: discord.Message):  # ends mee
         await user.send(templates.meeting_end)
         return meeting_code, 'm'
 
-async def get_attendance(client, user: discord.user, message: discord.Message):  # sends attendance for each user who has an attendance entry
+
+async def get_attendance(client, user: discord.user,
+                         message: discord.Message):  # sends attendance for each user who has an attendance entry
     db_user = db.get_db_user(user)
     info("Iterating over each user to get each attendance")
-    if db_user.discord_id in db.admins: # admin double check
+    if db_user.discord_id in db.admins:  # admin double check
         attendances = []
         for each_user in db.user_table.all():
             if each_user.attendance and each_user.choate_email:
@@ -94,10 +107,12 @@ async def get_attendance(client, user: discord.user, message: discord.Message): 
     return await user.send("\n".join(attendances))
 
 
-### Message routing ###
+""" Message routing """
 
-direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register), (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
-admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end), (r"(?i)get-attendance", get_attendance)]  # allows for regex expressions
+direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register),
+                   (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
+admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end),
+                         (r"(?i)get-attendance", get_attendance)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
@@ -111,8 +126,9 @@ async def handle_dm(client, user: discord.User, message: discord.Message):
     if db.check_admin(user):
         for each_command, function in admin_direct_commands:
             if bool(re.fullmatch(each_command, message.content)):
-                info(each_command + " command function executed by " + db.get_db_user(user).choate_email + " for " + str(message.content))
+                info(
+                    each_command + " command function executed by " + db.get_db_user(user).choate_email + " for " + str(
+                        message.content))
                 responses.append(await function(client, user, message))
 
     return responses
-
