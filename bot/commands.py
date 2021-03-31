@@ -1,5 +1,5 @@
 import discord
-from bot.msgs import templates, send
+from bot.msgs import templates, send, ctf_active, ctf_problems, ctf_flags
 import bot.database as db
 from bot.register import step1
 import re
@@ -46,6 +46,29 @@ async def attendance(client, user: discord.user,
             db.user_table.update(db_user)
             return await user.send(templates.attendance)
         return await user.send(templates.attendance_found)
+
+
+async def ctf_flag_submit(client, user: discord.user,
+                          message: discord.Message):
+    db_user = db.get_db_user(user)
+    info(f"Checking flag for {user} who tried {message.content} who has solved {db_user.ctf_problem_solves}")
+    for key in ctf_problems.yaml:
+        try:
+            if secrets.compare_digest(message.content, ctf_flags.yaml[key].strip()):
+                if db_user.ctf_problem_solves is None:
+                    db_user.ctf_problem_solves = []
+                if key not in db_user.ctf_problem_solves:
+                    info(f"Flag {message.content} accepted for {user}")
+                    db_user.ctf_problem_solves.append(key)
+                    db.user_table.update(db_user)
+                    return await user.send(templates.ctf_flag_acceptance)
+                else:
+                    info(f"Flag {message.content} already accepted for {user}")
+                    return await user.send(templates.ctf_flag_already_solved)
+        except KeyError:
+            pass
+    info(f"Flag {message.content} rejected for {user}")
+    return await user.send(templates.ctf_flag_rejection)
 
 
 """ Admin commands """
@@ -110,7 +133,7 @@ async def get_attendance(client, user: discord.user,
 """ Message routing """
 
 direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register),
-                   (r"[0-9a-fA-F]{8}", attendance)]  # allows for regex expressions
+                   (r"[0-9a-fA-F]{8}", attendance), (r"cpuCTF{.+}", ctf_flag_submit)]  # allows for regex expressions
 admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end),
                          (r"(?i)get-attendance", get_attendance)]  # allows for regex expressions
 

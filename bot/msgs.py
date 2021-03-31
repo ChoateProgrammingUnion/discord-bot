@@ -8,15 +8,23 @@ class MessageTemplates:
     Message template class that allows dot access notation to the templates.
     """
 
-    def __init__(self):
-        with open("messages.yaml") as f:
+    def __init__(self, filepath):
+        with open(filepath) as f:
             self.yaml = yaml.safe_load(f)
 
     def __getattr__(self, name: str):
         return self.yaml[name]
 
 
-templates = MessageTemplates()
+templates = MessageTemplates("messages.yaml")
+
+ctf_active = True
+try:
+    ctf_problems = MessageTemplates("problems.yaml")
+    ctf_flags = MessageTemplates("flags.yaml")
+except FileNotFoundError:
+    ctf_active = False
+
 
 async def send(user: discord.User, msg: str, **kwargs):
     max_size = 2000
@@ -30,6 +38,7 @@ async def send(user: discord.User, msg: str, **kwargs):
         return await user.send(msg_chunks[-1], **kwargs)
     else:
         return await user.send(msg, **kwargs)
+
 
 def chunk(msg: str, length: int, tolerance = 200) -> List[str]:
     """

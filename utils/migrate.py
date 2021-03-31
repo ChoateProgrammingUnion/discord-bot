@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/.env python
 import dataset
 from bot.database import user_table, DBUser, get_db_user
 

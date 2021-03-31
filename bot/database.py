@@ -27,6 +27,7 @@ class DBUser(DocumentModel):
     choate_email: Optional[str]
     opt_out_email: Optional[bool]
     attendance: Optional[list]
+    ctf_problem_solves: Optional[list]
 
     @validator("choate_email")
     def validate_email(cls, v):
