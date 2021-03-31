@@ -49,7 +49,7 @@ async def attendance(client, user: discord.user,
 
 
 async def ctf_flag_submit(client, user: discord.user,
-                          message: discord.Message):
+                          message: discord.Message):  # validates inputted cpuCTF flags
     db_user = db.get_db_user(user)
     info(f"Checking flag for {user} who tried {message.content} who has solved {db_user.ctf_problem_solves}")
     for key in ctf_problems.yaml:
@@ -130,12 +130,27 @@ async def get_attendance(client, user: discord.user,
     return await user.send("\n".join(attendances))
 
 
+async def ctf_get_solves(client, user: discord.user,
+                         message: discord.Message):  # ctf: debugging tool to check who solved what problems
+    db_user = db.get_db_user(user)
+    info("Iterating over each user to get all solves")
+    if db_user.discord_id in db.admins:  # admin double check
+        solves = []
+        for each_user in db.user_table.all():
+            if each_user.ctf_problem_solves and each_user.choate_email:
+                solves.append(f'{each_user.choate_email} | {len(each_user.ctf_problem_solves)}')
+
+    info("Sending Solves")
+    return await user.send("\n".join(solves))
+
+
 """ Message routing """
 
 direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register),
                    (r"[0-9a-fA-F]{8}", attendance), (r"cpuCTF{.+}", ctf_flag_submit)]  # allows for regex expressions
 admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end),
-                         (r"(?i)get-attendance", get_attendance)]  # allows for regex expressions
+                         (r"(?i)get-attendance", get_attendance), (r"(?i)ctf-get-solves", ctf_get_solves),
+                         ]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):
