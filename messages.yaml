@@ -45,7 +45,8 @@ admin_help: |
     `end`: ends meeting
     `get-attendance`: Prints attendance for all attending members
     `ctf-scoreboard-update`: Updates the current ctf scoreboard to the public
-    `ctf-scoreboard-clear`: Clears and updates the current ctf scoreboard
+    `ctf-get-solves`: Gets solves by user
+    `ctf-clear-solves`: Clears user solves and updates scoreboard
 
 attendance: |
   Your attendance has been recorded! Thank you for attending!
@@ -77,8 +78,9 @@ ctf_scoreboard: |
 ctf_scoreboard_update: |
   The scoreboard has been updated.
 
-ctf_scoreboard_clear: |
+ctf_solves_cleared: |
   The scoreboard has been cleared.
 
 ctf_problems: |
   The current CTF problems are:
+
