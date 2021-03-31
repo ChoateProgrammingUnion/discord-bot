@@ -75,6 +75,18 @@ async def ctf_flag_submit(client, user: discord.user,
     return await user.send(templates.ctf_flag_rejection)
 
 
+async def ctf_scoreboard_get(client, user: discord.user,
+                             message: discord.Message):  # prints ctf scoreboard
+    db_user = db.get_db_user(user)
+    scoreboard_formatted = ''
+    for place, item in enumerate(client.ctf_scoreboard):
+        if f"{db_user.first_name} {db_user.last_name}" in item[0]:
+            scoreboard_formatted += f"**{place+1}. {item[0]}**\n"
+        else:
+            scoreboard_formatted += f"{place+1}. {item[0]}\n"
+    return await user.send(f"{templates.ctf_scoreboard}\n{scoreboard_formatted}")
+
+
 """ Admin commands """
 
 
@@ -148,13 +160,40 @@ async def ctf_get_solves(client, user: discord.user,
     return await user.send("\n".join(solves))
 
 
+async def ctf_scoreboard_update(client, user: discord.user,
+                                message: discord.Message):
+    db_user = db.get_db_user(user)
+    if db_user.discord_id in db.admins:  # admin double check
+        problem_solves = {}
+        info("Iterating over each problem for setup")
+        for item in ctf_problems.yaml:
+            problem_solves[item] = 0
+        info("Iterating over each user to get all solves")
+        for each_user in db.user_table.all():
+            if each_user.ctf_problem_solves:
+                for item in problem_solves:
+                    if item in each_user.ctf_problem_solves:
+                        problem_solves[item] += 1
+        info("Iterating over each user to setup scoreboard")
+        client.ctf_scoreboard = []
+        for each_user in db.user_table.all():
+            if each_user.ctf_problem_solves and each_user.first_name and each_user.last_name:
+                user_points = 0
+                for problem in each_user.ctf_problem_solves:
+                    user_points += round(client.ctf_point_value / problem_solves[problem])
+                client.ctf_scoreboard.append((f"{each_user.first_name} {each_user.last_name}: {user_points} points", user_points))
+        client.ctf_scoreboard = sorted(client.ctf_scoreboard, key=lambda x: x[1])
+    return await ctf_scoreboard_get(client, user, message)
+
+
 """ Message routing """
 
 direct_commands = [(r"(?i)help", get_help), (r"(?i)info", get_info), (r"(?i)register", register),
-                   (r"[0-9a-fA-F]{8}", attendance), (r"cpuCTF{.+}", ctf_flag_submit)]  # allows for regex expressions
+                   (r"[0-9a-fA-F]{8}", attendance), (r"cpuCTF{.+}", ctf_flag_submit),
+                   (r"(?i)ctf-scoreboard", ctf_scoreboard_get)]  # allows for regex expressions
 admin_direct_commands = [(r"(?i)email", email), (r"(?i)start", start), (r"(?i)end", end),
                          (r"(?i)get-attendance", get_attendance), (r"(?i)ctf-get-solves", ctf_get_solves),
-                         ]  # allows for regex expressions
+                         (r"(?i)ctf-scoreboard-update", ctf_scoreboard_update)]  # allows for regex expressions
 
 
 async def handle_dm(client, user: discord.User, message: discord.Message):

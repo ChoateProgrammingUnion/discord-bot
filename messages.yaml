@@ -73,7 +73,6 @@ ctf_flag_already_solved: |
 
 ctf_scoreboard: |
   The current CTF scoreboard is:
-  {scoreboard_formatted}
 
 ctf_scoreboard_update: |
   The scoreboard has been updated.
@@ -83,4 +82,3 @@ ctf_scoreboard_clear: |
 
 ctf_problems: |
   The current CTF problems are:
-  {problems_formatted}

@@ -16,6 +16,8 @@ class CPUBotClient(discord.Client):
     def __init__(self, **options):
         super().__init__(**options)
         self.meeting_id = ''
+        self.ctf_scoreboard = []
+        self.ctf_point_value = 1000
 
     async def on_ready(self):
         info("Client connected to discord")
