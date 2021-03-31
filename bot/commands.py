@@ -10,7 +10,11 @@ import secrets
 
 
 async def get_help(client, user: discord.user, message: discord.Message):
-    return await send(user, templates.help)
+    db_user = db.get_db_user(user)
+    if db_user.discord_id in db.admins:
+        return await send(user, templates.help + '\n' + templates.admin_help)
+    else:
+        return await send(user, templates.help)
 
 
 async def get_info(client, user: discord.user, message: discord.Message):
