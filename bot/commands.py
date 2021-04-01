@@ -87,6 +87,16 @@ async def ctf_scoreboard_get(client, user: discord.user,
     return await user.send(f"{templates.ctf_scoreboard}\n{scoreboard_formatted}")
 
 
+async def ctf_get_problems(client, user: discord.user,
+                           message: discord.Message):  # prints ctf scoreboard
+    db_user = db.get_db_user(user)
+    problems_formatted = ''
+    for problem in ctf_problems.yaml:
+        solved = "solved" if problem in db_user.ctf_problem_solves else "unsolved"
+        problems_formatted += f"{problem}: {ctf_problems.yaml[problem].strip()} | {solved}\n"
+
+    return await user.send(f"{templates.ctf_problems}\n{problems_formatted}")
+
 """ Admin commands """
 
 
@@ -197,7 +207,7 @@ async def ctf_scoreboard_update(client, user: discord.user,
                         user_points += round(client.ctf_point_value / problem_solves[problem])
                 client.ctf_scoreboard.append(
                     (f"{each_user.first_name} {each_user.last_name}: {user_points} points", user_points))
-        client.ctf_scoreboard = sorted(client.ctf_scoreboard, key=lambda x: x[1])
+        client.ctf_scoreboard = sorted(client.ctf_scoreboard, key=lambda x: x[1], reverse=True)
     return await ctf_scoreboard_get(client, user, message)
 
 
@@ -208,7 +218,8 @@ direct_commands = [(r"(?i)help", get_help),
                    (r"(?i)register", register),
                    (r"[0-9a-fA-F]{8}", attendance),
                    (r"cpuCTF{.+}", ctf_flag_submit),
-                   (r"(?i)ctf-scoreboard", ctf_scoreboard_get)
+                   (r"(?i)ctf-scoreboard", ctf_scoreboard_get),
+                   (r"(?i)ctf-problems", ctf_get_problems),
                    ]  # allows for regex expressions
 admin_direct_commands = [(r"(?i)email", email),
                          (r"(?i)start", start),
