@@ -221,6 +221,7 @@ async def past_attendance_clear(client, user: discord.user,
         for each_user in db.user_table.all():
             each_user.attendance = [x for x in each_user.attendance if x not in target_attendance]
             db.user_table.update(each_user)
+    return await user.send("\n".join(target_attendance))
 
 """ Message routing """
 
