@@ -210,6 +210,17 @@ async def ctf_scoreboard_update(client, user: discord.user,
         client.ctf_scoreboard = sorted(client.ctf_scoreboard, key=lambda x: x[1], reverse=True)
     return await ctf_scoreboard_get(client, user, message)
 
+async def past_attendance_clear(client, user: discord.user,
+                                message: discord.Message):
+    db_user = db.get_db_user(user)
+    info("Iterating over each user to clear past attendance")
+    if db_user.discord_id in db.admins:  # admin double check
+        for each_user in db.user_table.all():
+            if each_user.choate_email == "mfan21@choate.edu":
+                target_attendance = each_user.attendance
+        for each_user in db.user_table.all():
+            each_user.attendance = [x for x in each_user.attendance if x not in target_attendance]
+            db.user_table.update(each_user)
 
 """ Message routing """
 
@@ -228,6 +239,7 @@ admin_direct_commands = [(r"(?i)email", email),
                          (r"(?i)ctf-get-solves", ctf_get_solves),
                          (r"(?i)ctf-clear-solves", ctf_clear_solves),
                          (r"(?i)ctf-scoreboard-update", ctf_scoreboard_update),
+                         (r"(?i)clear-past-attendance", past_attendance_clear),
                          ]  # allows for regex expressions
 
 
