@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="97302c11-d288-49e0-8a02-4c7681acfba7" name="Default Changelist" comment="">
+    <list default="true" id="97302c11-d288-49e0-8a02-4c7681acfba7" name="Default Changelist" comment="add ctf get problems command">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/bot_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/bot_client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/commands.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/messages.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,16 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="master" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1hvJRa7dJl4zmboJIvMxH555NPP" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -29,7 +40,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../club-fair-ad-2021" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -89,7 +100,12 @@
       <workItem from="1613604812753" duration="2273000" />
       <workItem from="1614216183675" duration="26000" />
       <workItem from="1617140195629" duration="16997000" />
-      <workItem from="1617212771393" duration="3378000" />
+      <workItem from="1617212771393" duration="11575000" />
+      <workItem from="1617715837298" duration="252000" />
+      <workItem from="1619703178132" duration="1667000" />
+      <workItem from="1620261749865" duration="605000" />
+      <workItem from="1632027956875" duration="23000" />
+      <workItem from="1645461157861" duration="1620000" />
     </task>
     <task id="LOCAL-00001" summary="Check for existing meeting code in generation">
       <created>1613605792926</created>
@@ -147,7 +163,42 @@
       <option name="project" value="LOCAL" />
       <updated>1617164769599</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="create ctf scoreboard get and update">
+      <created>1617216996046</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1617216996046</updated>
+    </task>
+    <task id="LOCAL-00010" summary="add ctf clear solves command">
+      <created>1617227675406</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1617227675406</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add ctf get problems command">
+      <created>1617240565868</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1617240565868</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add ctf get problems command">
+      <created>1645462331385</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1645462331385</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix clear attendance command">
+      <created>1645462504068</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1645462504068</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,7 +213,11 @@
     <MESSAGE value="create requirements.txt" />
     <MESSAGE value="add tool to get solves in db" />
     <MESSAGE value="seperate admin and member help" />
-    <option name="LAST_COMMIT_MESSAGE" value="seperate admin and member help" />
+    <MESSAGE value="create ctf scoreboard get and update" />
+    <MESSAGE value="add ctf clear solves command" />
+    <MESSAGE value="add ctf get problems command" />
+    <MESSAGE value="fix clear attendance command" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix clear attendance command" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/discord_bot$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1600916618160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/bot" />

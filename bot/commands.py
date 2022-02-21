@@ -216,12 +216,10 @@ async def past_attendance_clear(client, user: discord.user,
     info("Iterating over each user to clear past attendance")
     if db_user.discord_id in db.admins:  # admin double check
         for each_user in db.user_table.all():
-            if each_user.choate_email == "mfan21@choate.edu":
-                target_attendance = each_user.attendance
-        for each_user in db.user_table.all():
-            each_user.attendance = [x for x in each_user.attendance if x not in target_attendance]
+            if each_user.attendance:
+                each_user.attendance = []
             db.user_table.update(each_user)
-    return await user.send("\n".join(target_attendance))
+    return await user.send("Attendance Cleared")
 
 """ Message routing """
 
